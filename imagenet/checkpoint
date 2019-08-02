@@ -1,0 +1,6 @@
+model_checkpoint_path: "/data/ShizehaoDataset/mobilenet-model/model.ckpt-906808"
+all_model_checkpoint_paths: "/data/ShizehaoDataset/mobilenet-model/model.ckpt-906366"
+all_model_checkpoint_paths: "/data/ShizehaoDataset/mobilenet-model/model.ckpt-906477"
+all_model_checkpoint_paths: "/data/ShizehaoDataset/mobilenet-model/model.ckpt-906587"
+all_model_checkpoint_paths: "/data/ShizehaoDataset/mobilenet-model/model.ckpt-906697"
+all_model_checkpoint_paths: "/data/ShizehaoDataset/mobilenet-model/model.ckpt-906808"

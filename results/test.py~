@@ -1,0 +1,4 @@
+import torch
+pthfile = r'/home/lisa/fast-depth/results/mobilenet-nnconv5dw-skipadd.pth.tar'
+net = torch.load(pthfile)
+print(net)
