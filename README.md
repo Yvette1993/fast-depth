@@ -37,6 +37,18 @@ This repo offers trained models and evaluation code for the [FastDepth](http://f
 	```
 
 ## Trained Models ##
+  //lisa->
+  The training scripts cpme with several options, which can be listed woth the --help flag.
+  ```bash
+   python main.py --help
+ 
+   ```
+   For instance,run the following command to train a network with MobileNetSkipAdd as the model, and not have pretrained weights.
+   ```bash
+   python main.py -a MobileNetSkipAdd --no-pretrain --gpu 0
+   
+   ```
+
   The following trained models can be found at [http://datasets.lids.mit.edu/fastdepth/results/](http://datasets.lids.mit.edu/fastdepth/results/).
   - MobileNet-NNConv5
   - MobileNet-NNConv5(depthwise)
