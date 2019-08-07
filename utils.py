@@ -13,8 +13,12 @@ def parse_command():
     data_names = ['nyudepthv2']
     model_names = ['MobileNet','MobileNetSkipAdd']  #lisa ->
     loss_names = ['l1', 'l2']                       # ->
-
+   
+   
+  
+   
     from dataloaders.dataloader import MyDataloader
+   
     modality_names = MyDataloader.modality_names
 
     import argparse
@@ -24,6 +28,11 @@ def parse_command():
                         help='model architecture: ' + ' | '.join(model_names) + ' (default: MobileNetSkipAdd)')
     parser.add_argument('--resume', default='', type=str, metavar='PATH',
                         help='path to latest checkpoint (default: none)')
+    parser.add_argument('-s', '--num-samples', default=0, type=int, metavar='N',
+                        help='number of sparse depth samples (default: 0)')
+
+  
+
     parser.add_argument('--epochs', default=15, type=int, metavar='N',
                         help='number of total epochs to run (default: 15)')
     parser.add_argument('-c', '--criterion', metavar='LOSS', default='l1', choices=loss_names,
@@ -75,9 +84,9 @@ def adjust_learning_rate(optimizer, epoch, lr_init):
 
 def get_output_directory(args):
     output_directory = os.path.join('results',
-        '{}.sparsifier={}.samples={}.modality={}.arch={}.decoder={}.criterion={}.lr={}.bs={}.pretrained={}'.
-        format(args.data, args.sparsifier, args.num_samples, args.modality, \
-            args.arch, args.decoder, args.criterion, args.lr, args.batch_size, \
+        '{}.samples={}.modality={}.arch={}.criterion={}.lr={}.bs={}.pretrained={}'.
+        format(args.data, args.num_samples, args.modality, \
+            args.arch, args.criterion, args.lr, args.batch_size, \
             args.pretrained))
     return output_directory
 # -> 20190729

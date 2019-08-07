@@ -11,6 +11,7 @@ cudnn.benchmark = True
 
 import models
 from metrics import AverageMeter, Result
+import criteria
 import utils
 
 args = utils.parse_command()
@@ -62,6 +63,7 @@ def main():
 
 
     # evaluation mode
+    start_epoch =0
     if args.evaluate:
        assert os.path.isfile(args.evaluate), \
        "=> no model found at '{}'".format(args.evaluate)
@@ -120,6 +122,7 @@ def main():
                 in_channels=in_channels, pretrained=args.pretrained)
         elif args.arch == 'MobileNetSkipAdd':
             model = models.MobileNetSkipAdd(output_size=train_loader.dataset.output_size, pretrained=args.pretrained)
+            #print(model)
         print("=> model created.")
         optimizer = torch.optim.SGD(model.parameters(), args.lr, \
             momentum=args.momentum, weight_decay=args.weight_decay)
