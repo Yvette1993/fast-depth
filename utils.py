@@ -12,14 +12,15 @@ cmap = plt.cm.viridis
 def parse_command():
     data_names = ['nyudepthv2']
     model_names = ['MobileNet','MobileNetSkipAdd']  #lisa ->
-    loss_names = ['l1', 'l2']                       # ->
-   
-   
-  
-   
+    loss_names = ['l1', 'l2']                       
+    data_names = ['nyudepthv2', 'kitti']
+    from dataloaders.dense_to_sparse import UniformSampling, SimulatedStereo
+    sparsifier_names = [x.name for x in [UniformSampling, SimulatedStereo]]
+    from models import Decoder
+    decoder_names = Decoder.names
     from dataloaders.dataloader import MyDataloader
-   
-    modality_names = MyDataloader.modality_names
+    modality_names = MyDataloader.modality_names  # ->
+
 
     import argparse
     parser = argparse.ArgumentParser(description='FastDepth')
@@ -32,7 +33,8 @@ def parse_command():
                         help='number of sparse depth samples (default: 0)')
 
   
-
+    parser.add_argument('--decoder', '-d', metavar='DECODER', default='nnconv', choices=decoder_names,
+                        help='decoder: ' + ' | '.join(decoder_names) + ' (default: nnconv)')
     parser.add_argument('--epochs', default=15, type=int, metavar='N',
                         help='number of total epochs to run (default: 15)')
     parser.add_argument('-c', '--criterion', metavar='LOSS', default='l1', choices=loss_names,
@@ -46,7 +48,10 @@ def parse_command():
                         metavar='W', help='weight decay (default: 1e-4)')
     parser.add_argument('--no-pretrain', dest='pretrained', action='store_false',
                         help='not to use ImageNet pre-trained weights')
-    # ->20190729
+    parser.add_argument('--max-depth', default=-1.0, type=float, metavar='D',
+                        help='cut-off depth of sparsifier, negative values means infinity (default: inf [m])')
+    parser.add_argument('--sparsifier', metavar='SPARSIFIER', default=UniformSampling.name, choices=sparsifier_names,
+                        help='sparsifier: ' + ' | '.join(sparsifier_names) + ' (default: ' + UniformSampling.name + ')')
 
     parser.add_argument('--data', metavar='DATA', default='nyudepthv2',
                         choices=data_names,
@@ -62,6 +67,12 @@ def parse_command():
     parser.set_defaults(cuda=True)
 
     args = parser.parse_args()
+    if args.modality == 'rgb' and args.num_samples != 0:
+        print("number of samples is forced to be 0 when input modality is rgb")
+        args.num_samples = 0
+    if args.modality == 'rgb' and args.max_depth != 0.0:
+        print("max depth is forced to be 0.0 when input modality is rgb/rgbd")
+        args.max_depth = 0.0
     return args
 
 # lisa-> train

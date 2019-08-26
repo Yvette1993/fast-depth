@@ -45,7 +45,7 @@ class MyDataloader(data.Dataset):
 
     color_jitter = transforms.ColorJitter(0.4, 0.4, 0.4)
 
-    def __init__(self, root, split, modality='rgb', loader=h5_loader):
+    def __init__(self, root, split, sparsifier=None, modality='rgb', loader=h5_loader):
         classes, class_to_idx = self.find_classes(root)
         imgs = self.make_dataset(root, class_to_idx)
         assert len(imgs)>0, "Found 0 images in subfolders of: " + root + "\n"
@@ -74,6 +74,20 @@ class MyDataloader(data.Dataset):
 
     def val_transform(rgb, depth):
         raise (RuntimeError("val_transform() is not implemented."))
+
+    def create_sparse_depth(self, rgb, depth):
+        if self.sparsifier is None:
+            return depth
+        else:
+            mask_keep = self.sparsifier.dense_to_sparse(rgb, depth)
+            sparse_depth = np.zeros(depth.shape)
+            sparse_depth[mask_keep] = depth[mask_keep]
+            return sparse_depth
+
+    def create_rgbd(self, rgb, depth):
+        sparse_depth = self.create_sparse_depth(rgb, depth)
+        rgbd = np.append(rgb, np.expand_dims(sparse_depth, axis=2), axis=2)
+        return rgbd
 
     def __getraw__(self, index):
         """

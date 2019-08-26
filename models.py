@@ -133,6 +133,7 @@ class upproj(nn.Module):
         return F.relu(x1 + x2)
 
 class Decoder(nn.Module):
+        
     names = ['deconv{}{}'.format(i,dw) for i in range(3,10,2) for dw in ['', 'dw']]
     names.append("upconv")
     names.append("upproj")
@@ -142,7 +143,28 @@ class Decoder(nn.Module):
             names.append("blconv{}{}".format(i, dw))
             names.append("shuffle{}{}".format(i, dw))
 
+    #def __init__(self):
+    #    super(Decoder, self).__init__()
+
+    #    self.layer1 = None
+    #    self.layer2 = None
+    #    self.layer3 = None
+    #    self.layer4 = None
+    #    self.layer5 = None
+    #    self.layer6 = None
+
+
+    #def forward(self, x):
+    #    x = self.layer1(x)
+    #    x = self.layer2(x)
+    #    x = self.layer3(x)
+    #    x = self.layer4(x)
+    #    x = self.layer5(x)
+    #    x = self.layer6(x)
+    #    return x
+
 class DeConv(nn.Module):
+#class DeConv(Decoder):
 
     def __init__(self, kernel_size, dw):
         super(DeConv, self).__init__()
@@ -333,6 +355,8 @@ class ShuffleConv(nn.Module):
         return x
 
 def choose_decoder(decoder):
+   
+
     depthwise = ('dw' in decoder)
     if decoder[:6] == 'deconv':
         assert len(decoder)==7 or (len(decoder)==9 and 'dw' in decoder)
@@ -348,7 +372,10 @@ def choose_decoder(decoder):
         model = ShuffleConv(kernel_size, depthwise)
     elif decoder[:6] == 'nnconv':
         assert len(decoder)==7 or (len(decoder)==9 and 'dw' in decoder)
+
         kernel_size = int(decoder[6])
+        print('kernel_size:', kernel_size)
+
         model = NNConv(kernel_size, depthwise)
     elif decoder[:6] == 'blconv':
         assert len(decoder)==7 or (len(decoder)==9 and 'dw' in decoder)
@@ -424,8 +451,8 @@ class MobileNet(nn.Module):
         self.output_size = output_size
         mobilenet = imagenet.mobilenet.MobileNet()
         if pretrained:
-            #pretrained_path = os.path.join('imagenet', 'results', 'imagenet.arch=mobilenet.lr=0.1.bs=256', 'model_best.pth.tar')
-            pretrained_path = os.path.join('/home/lisa/fast-depth/imagenet', 'model.ckpt-906808.data-00000-of-00001')
+            pretrained_path = os.path.join('imagenet', 'results', 'imagenet.arch=mobilenet.lr=0.1.bs=256', 'model_best.pth.tar')
+            
 
             checkpoint = torch.load(pretrained_path)
             state_dict = checkpoint['state_dict']
@@ -660,8 +687,8 @@ class MobileNetSkipAdd(nn.Module):
         self.output_size = output_size
         mobilenet = imagenet.mobilenet.MobileNet()
         if pretrained:
-            #pretrained_path = os.path.join('imagenet', 'results', 'imagenet.arch=mobilenet.lr=0.1.bs=256', 'model_best.pth.tar')
-            pretrained_path = os.path.join('/home/lisa/fast-depth/imagenet', 'model.ckpt-906808.meta')
+            pretrained_path = os.path.join('imagenet', 'results', 'imagenet.arch=mobilenet.lr=0.1.bs=256', 'model_best.pth.tar')
+          
 
             checkpoint = torch.load(pretrained_path)
             state_dict = checkpoint['state_dict']
@@ -742,8 +769,8 @@ class MobileNetSkipConcat(nn.Module):
         self.output_size = output_size
         mobilenet = imagenet.mobilenet.MobileNet()
         if pretrained:
-            #pretrained_path = os.path.join('imagenet', 'results', 'imagenet.arch=mobilenet.lr=0.1.bs=256', 'model_best.pth.tar')
-            pretrained_path = os.path.join('imagenet', 'model.ckpt-906808.data-00000-of-00001 ')
+            pretrained_path = os.path.join('imagenet', 'results', 'imagenet.arch=mobilenet.lr=0.1.bs=256', 'model_best.pth.tar')
+           
             checkpoint = torch.load(pretrained_path)
             state_dict = checkpoint['state_dict']
 
