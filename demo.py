@@ -36,6 +36,14 @@ def main():
     if args.data == 'nyudepthv2':
         from dataloaders.nyu import NYUDataset
         val_dataset = NYUDataset(valdir, split='val', modality=args.modality)
+
+    elif args.data == 'kitti':
+        from dataloaders.kitti_dataloader import KITTIDataset
+        if not args.evaluate:
+            train_dataset = KITTIDataset(traindir, type='train',
+                modality=args.modality, sparsifier=sparsifier)
+        val_dataset = KITTIDataset(valdir, type='val',
+            modality=args.modality, sparsifier=sparsifier)
     else:
         raise RuntimeError('Dataset not found.')
 
@@ -116,8 +124,8 @@ def demo(val_loader, model, epoch, write_to_file=True):
             Lg10=float('{result.lg10:.3f}'.format(result=result))
         
             #print(t_GPU)
-            viz.line([[RMSE,MAE]],[i],win='demo2',update='append')
-            viz.line([[t_GPU,Delta1,REL,Lg10]],[i],win='demo1',update='append')
+            #viz.line([[]],[i],win='demo2',update='append')
+            viz.line([[RMSE/100,MAE/100,t_GPU,Delta1,REL,Lg10]],[i],win='demo',update='append')
             time.sleep(0.2)   
         
         

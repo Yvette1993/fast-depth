@@ -23,10 +23,21 @@ def data(dir_name):
                 img = np.transpose(img, (2,0,1)) #(c,w,h)
                 data.append(img)
     return data
+def depth(dir_name):
+    data = []
+  
+    for root,dirs,files in os.walk(dir_name):
+        for f in files:
+            if os.path.splitext(f)[-1] == '.png':
+                path = os.path.join(root,f)           
+                img=cv2.imread(path,cv2.IMREAD_GRAYSCALE)
+                #img = np.transpose(img, (2,0,1)) #(c,w,h)
+                data.append(img)
+    return data
 
 train = data(file_dir)
 print(len(train))
-train_depth=data(depth_dir)
+train_depth=depth(depth_dir)
 print(len(train_depth))
 
 #val = data(file_dir)

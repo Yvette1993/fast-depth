@@ -6,7 +6,7 @@ import numpy as np
 
 
 
-def data(path,dir_name):
+def rgb(path,dir_name):
     data = []
   
     for root,dirs,files in os.walk(os.path.join(path,dir_name)):
@@ -20,13 +20,25 @@ def data(path,dir_name):
                 
     return data
 
+def depth(path,dir_name):
+    depth = []
+    for root,dirs,files in os.walk(os.path.join(path,dir_name)):
+        for f in files:
+            #print(f)
+             if os.path.splitext(f)[-1] == '.png':
+                 path = os.path.join(root,f)
+                 img =cv2.imread(path,cv2.IMREAD_GRAYSCALE)   ##(w,h,c)
+                 #img = np.transpose(img1, (2,0,1)) #(c,w,h)
+                 
+                 data.append(img)
+
 
 
 
 def png2h5(path,file_dir,depth_dir):
     rgb = data(path,file_dir)
     print(len(rgb))
-    depth=data(path,depth_dir)
+    depth=depth(path,depth_dir)
     print(len(depth))
 
 
