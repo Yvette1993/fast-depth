@@ -11,6 +11,8 @@ cudnn.benchmark = True
 
 import models
 from metrics import AverageMeter, Result
+from dataloaders.dense_to_sparse import UniformSampling, SimulatedStereo
+import criteria
 import utils
 
 import visdom
@@ -39,11 +41,8 @@ def main():
 
     elif args.data == 'kitti':
         from dataloaders.kitti_dataloader import KITTIDataset
-        if not args.evaluate:
-            train_dataset = KITTIDataset(traindir, type='train',
-                modality=args.modality, sparsifier=sparsifier)
         val_dataset = KITTIDataset(valdir, type='val',
-            modality=args.modality, sparsifier=sparsifier)
+            modality=args.modality, sparsifier= None)
     else:
         raise RuntimeError('Dataset not found.')
 
@@ -75,8 +74,8 @@ def demo(val_loader, model, epoch, write_to_file=True):
     model.eval() # switch to evaluate mode
     end = time.time()
 
-    viz.line([[0.,0.]],[0],win='demo2',opts=dict(title='resluts2',legend=['RMSE','MAE']))
-    viz.line([[0.,0.,0.,0.]],[0],win='demo1',opts=dict(title='resluts1',legend=['t_GPU','Delta1','REL','lG10']))
+    #viz.line([[0.,0.]],[0],win='demo2',opts=dict(title='resluts2',legend=['RMSE','MAE']))
+    viz.line([[0.,0.,0.,0.,0.,0.]],[0],win='demo1',opts=dict(title='resluts1',legend=['t_GPU','Delta1','REL','lG10','RMSE','MAE']))
 
     for i, (input, target) in enumerate(val_loader):
         input, target = input.cuda(), target.cuda()
@@ -124,8 +123,8 @@ def demo(val_loader, model, epoch, write_to_file=True):
             Lg10=float('{result.lg10:.3f}'.format(result=result))
         
             #print(t_GPU)
-            #viz.line([[]],[i],win='demo2',update='append')
-            viz.line([[RMSE/100,MAE/100,t_GPU,Delta1,REL,Lg10]],[i],win='demo',update='append')
+            #viz.line([[RMSE,MAE]],[i],win='demo2',update='append')
+            viz.line([[t_GPU,Delta1,REL,Lg10,RMSE,MAE]],[i],win='demo1',update='append')
             time.sleep(0.2)   
         
         

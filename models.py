@@ -688,7 +688,6 @@ class MobileNetSkipAdd(nn.Module):
         mobilenet = imagenet.mobilenet.MobileNet()
         if pretrained:
             pretrained_path = os.path.join('imagenet', 'results', 'imagenet.arch=mobilenet.lr=0.1.bs=256', 'model_best.pth.tar')
-          
 
             checkpoint = torch.load(pretrained_path)
             state_dict = checkpoint['state_dict']

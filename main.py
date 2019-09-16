@@ -140,6 +140,7 @@ def main():
         if args.arch == 'MobileNet':
             model = models.MobileNet(decoder=args.decoder, output_size=train_loader.dataset.output_size,
                 in_channels=in_channels, pretrained=args.pretrained)
+            print(model)
         elif args.arch == 'MobileNetSkipAdd':
             model = models.MobileNetSkipAdd(output_size=train_loader.dataset.output_size, pretrained=args.pretrained)
             #print(model)

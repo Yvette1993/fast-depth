@@ -31,13 +31,15 @@ class Result(object):
     def evaluate(self, output, target):
         valid_mask = ((target>0) + (output>0)) > 0
 
-        output = 1e3 * output[valid_mask]
-        target = 1e3 * target[valid_mask]
+        #output = 1e3 * output[valid_mask]
+        #target = 1e3 * target[valid_mask]
+        output = output[valid_mask]
+        target = target[valid_mask]
         abs_diff = (output - target).abs()
 
         self.mse = float((torch.pow(abs_diff, 2)).mean())
         self.rmse = math.sqrt(self.mse)
-        self.mae = float(abs_diff.mean())
+        self.mae = float(abs_diff.mean())  
         self.lg10 = float((log10(output) - log10(target)).abs().mean())
         self.absrel = float((abs_diff / target).mean())
 

@@ -5,4 +5,6 @@
 #sudo python2 main.py --arch MobileNetSkipAdd  --epochs 20  --print-freq 100 --gpu 0  #->nyudepthv2.samples=0.modality=rgb.arch=MobileNetSkipAdd.criterion=l1.lr=0.01.bs=8.pretrained=True    best_model=epoch 18
 
 
-python2 main.py --arch MobileNetSkipAdd -b 10 --epochs 20  --print-freq 50 --gpu 0
+#sudo python2 main.py --data kitti  --gpu 0
+
+sudo python2 main.py --no-pretrain --data kitti --gpu 0
